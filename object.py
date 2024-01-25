@@ -2,6 +2,10 @@ import streamlit as st
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
+def objId(findme):
+    for find in collection.find({f'{findme}' :{'$exists': 'true'}}):
+        return find['_id']
+        break
 
 
 
@@ -29,7 +33,7 @@ if "count" not in st.session_state:
 db = st.session_state.client["test"]
 collection  = db.stds
 
-for find in collection.find({'_id':ObjectId('65b20bd984449b4530581b02')},{'_id':0}):
+for find in collection.find({'_id':ObjectId(objId('Group Leaders'))},{'_id':0}):
     testinglist = find
 
 if "group_choices" not in st.session_state:
@@ -50,7 +54,7 @@ def groupChoosen():
         st.session_state.group_choice ="No free group"
 
     else:
-        for find in collection.find({'_id':ObjectId('65b20bd984449b4530581b02')},{'_id':0}):
+        for find in collection.find({'_id':ObjectId(objId('Group Leaders'))},{'_id':0}):
             testinglist = find
         group_choices = testinglist["Group Leaders"]
 
@@ -69,11 +73,11 @@ def groupChoosen():
     
 
 st.set_page_config(page_title="mongos tutorial")
-if st.session_state.matric!= None and (st.session_state.matric) not in range(-5000000000000000000000,2000):
+if st.session_state.matric!= None and (st.session_state.matric) not in range(-5000000000000000000000,2000) and st.session_state.matric != 4188 and st.session_state.matric != 4035:
     st.write(f"enter the last 4 digits as your matric")
     st.session_state.matric_disabled = True
 
-if st.session_state.name!= None and (st.session_state.name) != '' and len(st.session_state.name)>6:
+if st.session_state.name!= None and (st.session_state.name) != '' and len(st.session_state.name)>6  :
     st.session_state.user_disabled = True
 
 def Submit():
@@ -88,13 +92,13 @@ st.session_state.name = st.text_input("Enter your name", disabled=st.session_sta
 
 st.session_state.matric = st.number_input("Enter your matric",disabled=st.session_state.matric_disabled, key= "student_matric",format="%i",value=0, help="enter the last 4 digits as your matric")
 
-if st.session_state.name is not None and len(st.session_state.name) > 6 and st.session_state.matric not in range(-5000000000000000000000,2000):
+if st.session_state.name is not None and len(st.session_state.name) > 6 and st.session_state.matric not in range(-5000000000000000000000,2000) and st.session_state.matric != 4188 and st.session_state.matric != 4035:
 
     if st.button("Shuffle,join group and submit", type="primary"):
         match_found = False
 
         for find in collection.find({}):
-            if find['_id'] == ObjectId('65b20bd984449b4530581b02'):
+            if find['_id'] == ObjectId(objId('Group Leaders')):
                 pass
             else:
                 
@@ -106,6 +110,7 @@ if st.session_state.name is not None and len(st.session_state.name) > 6 and st.s
 
         if not match_found:
             groupChoosen()
+        
             st.write(f"{st.session_state.name}, {st.session_state.matric}, {st.session_state.group_choice}")
             collection.insert_one({"name": st.session_state.name, "matric no": st.session_state.matric, "Group Leader": st.session_state.group_choice})
             st.toast(f"Successfully joined Team {st.session_state.group_choice}", icon="✅")
