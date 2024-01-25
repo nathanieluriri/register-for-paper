@@ -69,23 +69,27 @@ def groupChoosen():
     
 
 st.set_page_config(page_title="mongos tutorial")
-if st.session_state.matric!= None and (st.session_state.matric) not in range(0,2000):
+if st.session_state.matric!= None and (st.session_state.matric) not in range(-5000000000000000000000,2000):
     st.write(f"enter the last 4 digits as your matric")
     st.session_state.matric_disabled = True
 
-if st.session_state.name!= None and (st.session_state.name) != '':
+if st.session_state.name!= None and (st.session_state.name) != '' and len(st.session_state.name)>6:
     st.session_state.user_disabled = True
+
 def Submit():
     st.session_state.count+=1
     
     st.write(st.session_state.count)
 
-st.info(icon="💀", body="FIll in your details click shuffle and submit to join a group")
+st.info(icon="💀", body="FIll in with your Full Name and with Your last 4 digits of your Matric no.")
+st.info(icon="🤖",body="Then Click shuffle and submit to join a group")
 st.button("Submit name or matric you can only submit once")
 st.session_state.name = st.text_input("Enter your name", disabled=st.session_state.user_disabled, key="student_name", value=st.session_state.name)
 
 st.session_state.matric = st.number_input("Enter your matric",disabled=st.session_state.matric_disabled, key= "student_matric",format="%i",value=0, help="enter the last 4 digits as your matric")
-if st.session_state.name is not None and len(st.session_state.name) > 6 and st.session_state.matric not in range(0,2000):
+
+if st.session_state.name is not None and len(st.session_state.name) > 6 and st.session_state.matric not in range(-5000000000000000000000,2000):
+
     if st.button("Shuffle,join group and submit", type="primary"):
         match_found = False
 
@@ -104,7 +108,9 @@ if st.session_state.name is not None and len(st.session_state.name) > 6 and st.s
             groupChoosen()
             st.write(f"{st.session_state.name}, {st.session_state.matric}, {st.session_state.group_choice}")
             collection.insert_one({"name": st.session_state.name, "matric no": st.session_state.matric, "Group Leader": st.session_state.group_choice})
-            st.success(f"Successfully joined Team {st.session_state.group_choice}", icon="✅")
+            st.toast(f"Successfully joined Team {st.session_state.group_choice}", icon="✅")
+            st.balloons()
+
 
 
 
