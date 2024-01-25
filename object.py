@@ -25,7 +25,7 @@ if "matric" not in st.session_state:
 
 if "count" not in st.session_state:
     st.session_state.count= 0
-    
+
 db = st.session_state.client["test"]
 collection  = db.stds
 
@@ -94,9 +94,10 @@ if st.session_state.name is not None and len(st.session_state.name) > 6 and st.s
                 pass
             else:
                 
-                if find["name"] == st.session_state.name and find["matric no"] == st.session_state.matric:
+                if find["name"] in st.session_state.name or find["matric no"] == st.session_state.matric:
                     match_found = True
                     st.error(f"You are already in team | {find['Group Leader']} |", icon="🚨")
+                    st.error(f"You registered with Name: {find['name']} and Matric: {find['matric no']}")
                     break  
 
         if not match_found:
