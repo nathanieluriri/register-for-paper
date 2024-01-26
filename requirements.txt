@@ -1,2 +1,5 @@
 pymongo
 streamlit
+bcrypt
+pymodm
+bson

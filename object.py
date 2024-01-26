@@ -115,6 +115,8 @@ if st.session_state.name is not None and len(st.session_state.name) > 6 and st.s
             collection.insert_one({"name": st.session_state.name, "matric no": st.session_state.matric, "Group Leader": st.session_state.group_choice})
             st.toast(f"Successfully joined Team {st.session_state.group_choice}", icon="✅")
             st.balloons()
+            st.session_state.client.close()
+            st.toast("Connection closed",icon="✅")
 
 
 
